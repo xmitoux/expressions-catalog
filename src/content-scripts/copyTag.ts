@@ -1,4 +1,4 @@
-import { getAllImageElements } from '@/utils/dom-control';
+import { getAllImageElements, showNotification } from '@/utils/dom-control';
 
 export const copyTag = (imageTagMap: ImageTagMap) => {
     const images = getAllImageElements();
@@ -14,9 +14,14 @@ export const copyTag = (imageTagMap: ImageTagMap) => {
 
         try {
             await navigator.clipboard.writeText(imageTag);
-        } catch {
-            throw new Error('クリップボードのコピー処理に失敗しました。');
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(`クリップボードのコピーに失敗しました。${error.message}`);
+                console.error(error);
+            }
         }
+
+        showNotification(`Copied "${imageTag}"`);
     };
 
     images.forEach((image) => {

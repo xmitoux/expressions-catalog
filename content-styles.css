@@ -1,0 +1,21 @@
+.notification {
+    display: none;
+    position: fixed;
+    top: 10px; /* 画面上部からの距離 */
+    left: 50%; /* 中央揃え */
+    transform: translateX(-50%); /* 左右中央揃えのための調整 */
+    background-color: rgb(152, 251, 152, 0.8);
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000; /* 他の要素の上に表示する */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease;
+    opacity: 0;
+}
+
+.notification.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(20px); /* 表示時の微調整 */
+}
