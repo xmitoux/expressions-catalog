@@ -1,4 +1,5 @@
-import { getAllImageTdElements, showNotification } from '@/utils/dom-control';
+import { getAllImageTdElements } from '@/utils/dom-control';
+import { ElMessage } from 'element-plus';
 
 export const copyTag = () => {
     const images = getAllImageTdElements();
@@ -16,7 +17,10 @@ export const copyTag = () => {
             }
         }
 
-        showNotification(`Copied "${tagName}"`);
+        ElMessage.success({
+            message: `Copied "${tagName}"`,
+            duration: 1500,
+        });
     };
 
     images.forEach((image) => {
