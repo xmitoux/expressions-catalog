@@ -25,13 +25,6 @@ export const manifest = defineManifest((env) => ({
         {
             matches: ['https://rentry.co/NAIDv3expressions'],
             js: ['./src/content.ts'],
-            css: ['content-styles.css'],
-        },
-    ],
-    web_accessible_resources: [
-        {
-            matches: ['https://rentry.co/*'],
-            resources: ['content-styles.css'],
         },
     ],
 }));
