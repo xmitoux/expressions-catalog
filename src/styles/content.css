@@ -1,0 +1,28 @@
+.checkbox-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    z-index: 10;
+}
+
+.checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    margin: 0.5em;
+}
+
+/* 親要素にposition: relative;を追加 */
+td:has(img) {
+    position: relative;
+}
+
+.image-checkbox {
+    margin-right: 0.5em;
+    display: none;
+}
+
+.image-checkbox + label {
+    cursor: pointer;
+    user-select: none; /* テキスト選択を防止 */
+}

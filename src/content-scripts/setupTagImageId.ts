@@ -1,4 +1,5 @@
 import { getAllImageTdElements, getAllTagTdElements } from '@/utils/dom-control';
+import { setupFilterMarks } from '@/content-scripts/setupFilterMarks';
 
 export const setupTagImageId = (): void => {
     const tagTdElements = getAllTagTdElements();
@@ -13,8 +14,10 @@ export const setupTagImageId = (): void => {
         const isPopularTag = !!tagTd.querySelector('mark');
         isPopularTag && tagTd.classList.add('popular');
 
-        const imageTd = imageTdElements[index];
+        const imageTd = imageTdElements[index]!;
         imageTd.id = `${tagName}-image`;
         isPopularTag && imageTd.classList.add('popular');
+
+        setupFilterMarks(imageTd);
     });
 };
