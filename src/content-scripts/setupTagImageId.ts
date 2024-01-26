@@ -1,5 +1,6 @@
 import { getAllImageTdElements, getAllTagTdElements } from '@/utils/dom-control';
 import { setupFilterMarks } from '@/content-scripts/setupFilterMarks';
+import { getStorage } from '@/utils/chrome-api';
 
 export const setupTagImageId = (): void => {
     const tagTdElements = getAllTagTdElements();
@@ -18,6 +19,6 @@ export const setupTagImageId = (): void => {
         imageTd.id = `${tagName}-image`;
         isPopularTag && imageTd.classList.add('popular');
 
-        setupFilterMarks(imageTd);
+        getStorage(({ filterMark }) => setupFilterMarks(imageTd, filterMark));
     });
 };

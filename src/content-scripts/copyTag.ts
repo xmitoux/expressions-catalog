@@ -1,12 +1,13 @@
 import { getAllImageTdElements } from '@/utils/dom-control';
+import { getTagNameFromImageId } from '@/utils/utils';
 import { ElMessage } from 'element-plus';
 
 export const copyTag = () => {
-    const images = getAllImageTdElements();
+    const imageTds = getAllImageTdElements();
 
     const onImageClick = async (event: MouseEvent) => {
         const image = event.target as HTMLImageElement;
-        const tagName = image.parentElement!.id.replace('-image', '');
+        const tagName = getTagNameFromImageId(image.parentElement!.id);
 
         try {
             await navigator.clipboard.writeText(tagName);
@@ -23,7 +24,7 @@ export const copyTag = () => {
         });
     };
 
-    images.forEach((image) => {
-        image.addEventListener('click', onImageClick);
+    imageTds.forEach((imageTd) => {
+        imageTd.addEventListener('click', onImageClick);
     });
 };

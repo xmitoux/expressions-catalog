@@ -1,3 +1,4 @@
-type ExtensionSettings = { filterMark: Record<string, string[]> };
+type FilterMark = Record<string, string[]>;
+type ExtensionSettings = { filterMark: FilterMark };
 
 type ImageTagMap = Map<string, string>;

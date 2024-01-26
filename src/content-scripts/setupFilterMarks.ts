@@ -1,22 +1,25 @@
 import { getStorage, saveStorage } from '@/utils/chrome-api';
-export const setupFilterMarks = (imageTd: HTMLTableCellElement) => {
-    const setup = ({ filterMark }: ExtensionSettings) => {
-        const tagName = imageTd.id;
+import { getTagNameFromImageId } from '@/utils/utils';
 
-        const checkboxContainer = document.createElement('div');
-        checkboxContainer.className = 'checkbox-container';
-        imageTd.prepend(checkboxContainer);
+export const setupFilterMarks = (imageTd: HTMLTableCellElement, filterMark: FilterMark) => {
+    const tagName = getTagNameFromImageId(imageTd.id);
 
-        ['🌟', '📎', '👎'].forEach((icon) => {
-            const checkbox = document.createElement('input');
-            const checkboxId = `${tagName}-${icon}`;
-            checkbox.id = checkboxId;
-            checkbox.type = 'checkbox';
-            checkbox.className = 'image-checkbox';
-            checkbox.checked = !!filterMark[tagName]?.includes(icon);
-            checkbox.addEventListener(
-                'change',
-                (event) => {
+    const checkboxContainer = document.createElement('div');
+    checkboxContainer.className = 'checkbox-container';
+    imageTd.prepend(checkboxContainer);
+
+    ['🌟', '📎', '👎'].forEach((icon) => {
+        const checkbox = document.createElement('input');
+        const checkboxId = `${tagName}-${icon}`;
+        checkbox.id = checkboxId;
+        checkbox.type = 'checkbox';
+        checkbox.className = 'image-checkbox';
+        checkbox.checked = !!filterMark[tagName]?.includes(icon);
+
+        checkbox.addEventListener(
+            'change',
+            (event) => {
+                getStorage(({ filterMark }) => {
                     // 未設定なら空配列で初期化
                     filterMark[tagName] = filterMark[tagName] || [];
 
@@ -31,29 +34,27 @@ export const setupFilterMarks = (imageTd: HTMLTableCellElement) => {
                         imageTd.classList.remove(icon);
                     }
                     saveStorage({ filterMark });
-                },
-                true,
-            );
-            // 画像tdにクリックイベントを伝播させない
-            checkbox.addEventListener('click', (event) => event.stopPropagation());
+                });
+            },
+            true,
+        );
+        // 画像tdにクリックイベントを伝播させない
+        checkbox.addEventListener('click', (event) => event.stopPropagation());
 
-            const label = document.createElement('label');
-            label.textContent = icon;
-            label.htmlFor = checkboxId;
-            // 画像tdにクリックイベントを伝播させない
-            label.addEventListener('click', (event) => {
-                event.stopPropagation();
-            });
-
-            const wrapper = document.createElement('div');
-            wrapper.className = 'checkbox-wrapper';
-
-            wrapper.appendChild(checkbox);
-            wrapper.appendChild(label);
-
-            checkboxContainer.appendChild(wrapper);
+        const label = document.createElement('label');
+        label.textContent = icon;
+        label.htmlFor = checkboxId;
+        // 画像tdにクリックイベントを伝播させない
+        label.addEventListener('click', (event) => {
+            event.stopPropagation();
         });
-    };
 
-    getStorage(setup);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'checkbox-wrapper';
+
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(label);
+
+        checkboxContainer.appendChild(wrapper);
+    });
 };
