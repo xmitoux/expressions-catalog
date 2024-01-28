@@ -7,24 +7,29 @@ export const getAllImageTdElements = (): HTMLTableCellElement[] => {
 };
 
 export const rearrangeImages = (imagesPerRow: number) => {
-    const filterPredicate = (td: HTMLTableCellElement) => td.style.display === '';
-    const tagTDs = [...getAllTagTdElements()].filter(filterPredicate);
-    const imageTDs = [...getAllImageTdElements()].filter(filterPredicate);
+    const tagTDs = [...getAllTagTdElements()];
+    const imageTDs = [...getAllImageTdElements()];
 
+    // 指定枚数でtrを再構築する
     const newRows: HTMLElement[] = [];
-
-    // 指定されたカラム数ごとにtdを分割し、新しいtrを作成
-    for (let i = 0; i < tagTDs.length; i += imagesPerRow) {
+    let currentTagIndex = 0;
+    while (currentTagIndex < tagTDs.length) {
         const tagTR = document.createElement('tr');
         const imageTR = document.createElement('tr');
 
-        // タグ行と画像行を処理
-        tagTDs.slice(i, i + imagesPerRow).forEach((td) => {
-            tagTR.appendChild(td);
-        });
-        imageTDs.slice(i, i + imagesPerRow).forEach((td) => {
-            imageTR.appendChild(td);
-        });
+        // trにタグと画像のtdを詰めていく
+        let imageCount = 0;
+        while (imageCount < imagesPerRow && currentTagIndex < tagTDs.length) {
+            tagTR.appendChild(tagTDs[currentTagIndex]!);
+            imageTR.appendChild(imageTDs[currentTagIndex]!);
+
+            // フィルタ非表示画像も再表示時の保持用に詰めるが、1行あたりの枚数にカウントしない
+            if (tagTDs[currentTagIndex]!.style.display !== 'none') {
+                imageCount++;
+            }
+
+            currentTagIndex++;
+        }
 
         newRows.push(tagTR, imageTR);
     }
