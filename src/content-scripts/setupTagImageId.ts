@@ -6,7 +6,9 @@ export const setupTagImageId = (): void => {
     const tagTdElements = getAllTagTdElements();
     const imageTdElements = getAllImageTdElements();
 
-    getStorage(({ filterMark }) => {
+    getStorage(({ filterMarksString }) => {
+        const settingFilterMarks = JSON.parse(filterMarksString);
+
         tagTdElements.forEach((tagTd, index) => {
             const tagName = tagTd.querySelector('code')!.textContent!;
 
@@ -20,7 +22,7 @@ export const setupTagImageId = (): void => {
             imageTd.id = `${tagName}-image`;
             isPopularTag && imageTd.classList.add('popular');
 
-            setupFilterMarks(tagTd, imageTd, filterMark, index);
+            setupFilterMarks(tagTd, imageTd, settingFilterMarks, index);
         });
     });
 };

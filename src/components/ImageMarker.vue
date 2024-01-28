@@ -20,9 +20,11 @@ onMounted(() => {
 });
 
 const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
-    getStorage(({ filterMark }) => {
-        filterMark[props.tagName] = filterMarks;
-        saveStorage({ filterMark });
+    getStorage(({ filterMarksString }) => {
+        const settingFilterMarks = JSON.parse(filterMarksString);
+
+        settingFilterMarks[props.tagName] = filterMarks;
+        saveStorage({ filterMarksString: JSON.stringify(settingFilterMarks) });
 
         const tagTd = props.tagTd;
         const imageTd = props.imageTd;
