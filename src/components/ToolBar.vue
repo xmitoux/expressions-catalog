@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { ElCheckboxButton, ElCheckboxGroup, ElIcon, ElInputNumber, ElRow } from 'element-plus';
-import { Box, Paperclip, Star } from '@element-plus/icons-vue';
+import { Box, Hide, Paperclip, Star } from '@element-plus/icons-vue';
 import { getAllTagTdElements, getAllImageTdElements } from '@/utils/dom-control';
 
 const imagesPerRow = ref(5);
 
-onMounted(() => rearrangeImages());
+onMounted(() => {
+    changeUnnecessaryElementsVisible(true);
+    rearrangeImages();
+});
 
-const checkboxGroup = ref([]);
+const checkboxGroup = ref<FilterMarkChar[]>([]);
 
 const rearrangeImages = async () => {
     const tagTDs = [...getAllTagTdElements()];
@@ -60,6 +63,21 @@ const rearrangeImages = async () => {
     });
 };
 
+const changeUnnecessaryElementsVisible = (hide: boolean) => {
+    const actionIcon = document.querySelector<HTMLDivElement>('.actions')!;
+    actionIcon.style.display = hide ? 'none' : '';
+    const paragraphElements = document.querySelectorAll<HTMLParagraphElement>('article p');
+    paragraphElements.forEach((el) => {
+        el.style.display = hide ? 'none' : '';
+    });
+};
+
+const hideCheckbox = ref(['hide']);
+const hide = computed(() => !!hideCheckbox.value.length);
+const onHideCheckChagend = () => {
+    changeUnnecessaryElementsVisible(hide.value);
+};
+
 const onCheckChagend = () => {
     rearrangeImages();
 };
@@ -72,12 +90,13 @@ const onImagesPerRowChange = () => {
 <template>
     <div class="toolbar">
         <ElRow align="middle" justify="center">
-            <ElCheckboxGroup
-                v-model="checkboxGroup"
-                class="pt-2"
-                size="large"
-                @change="onCheckChagend"
-            >
+            <ElCheckboxGroup v-model="hideCheckbox" class="pt-2" @change="onHideCheckChagend">
+                <ElCheckboxButton class="mr-2" label="hide">
+                    <ElIcon :size="15"><Hide /></ElIcon>
+                </ElCheckboxButton>
+            </ElCheckboxGroup>
+
+            <ElCheckboxGroup v-model="checkboxGroup" class="pt-2" @change="onCheckChagend">
                 <ElCheckboxButton label="popular">
                     <ElIcon :size="15"><Box /></ElIcon>
                 </ElCheckboxButton>
