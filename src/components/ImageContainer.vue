@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { ElCheckboxButton, ElCheckboxGroup, ElIcon } from 'element-plus';
+import { ElCheckboxButton, ElCheckboxGroup, ElIcon, ElMessage } from 'element-plus';
 import { Paperclip, Star } from '@element-plus/icons-vue';
 import { getStorage, saveStorage } from '@/utils/chrome-api';
 import { escapeSelector } from '@/utils/utils';
@@ -50,21 +50,42 @@ const onClickCheckbox = (event: Event) => event.stopPropagation();
 
 const isHovered = ref(false);
 
-const image = ref<HTMLDivElement>();
+const imageContainer = ref<HTMLDivElement>();
 const injectImageElement = () => {
     const imageElement = document.querySelector(`#${escapeSelector(props.tagName)}-image img`);
-    if (imageElement && image.value) {
-        image.value.appendChild(imageElement);
+    if (imageElement && imageContainer.value) {
+        imageContainer.value.appendChild(imageElement);
     }
+};
+
+const copyTagName = async () => {
+    try {
+        await navigator.clipboard.writeText(props.tagName);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(`クリップボードのコピーに失敗しました。${error.message}`);
+            console.error(error);
+        }
+    }
+
+    ElMessage.success({
+        message: `Copied "${props.tagName}"`,
+        duration: 1500,
+    });
 };
 </script>
 
 <template>
-    <div @mouseover="isHovered = true" @mouseleave="isHovered = false">
+    <div
+        class="checkbox-container"
+        @click="copyTagName"
+        @mouseover="isHovered = true"
+        @mouseleave="isHovered = false"
+    >
         <ElCheckboxGroup
             v-show="isHovered"
             v-model="checkboxGroup"
-            class="pt-3 pr-3 checkbox-container"
+            class="checkbox"
             size="small"
             @change="onCheckChagend(checkboxGroup)"
             @click="onClickCheckbox"
@@ -76,22 +97,18 @@ const injectImageElement = () => {
                 <ElIcon :size="15"><Paperclip /></ElIcon>
             </ElCheckboxButton>
         </ElCheckboxGroup>
-        <div ref="image"></div>
+        <div ref="imageContainer"></div>
     </div>
 </template>
 
 <style scoped>
 .checkbox-container {
+    position: relative;
+}
+
+.checkbox {
     position: absolute;
     top: 0;
     right: 0;
-    display: flex;
-    z-index: 10;
-}
-
-.checkbox-wrapper {
-    display: inline-flex;
-    align-items: center;
-    margin: 0.5em;
 }
 </style>

@@ -1,13 +1,5 @@
-import { setupTagImageId } from '@/content-scripts/setupTagImageId';
-import { copyTag } from '@/content-scripts/copyTag';
-import { setupAppContent } from '@/content-scripts/setupAppContent';
-import { getStorage } from '@/utils/chrome-api';
+import { setupTagImagePairs } from '@/content-scripts/setupTagImagePairs';
+import { setupToolBar } from '@/content-scripts/setupToolBar';
 
-// ページ読み込み時に設定を取得する
-getStorage((settings) => {
-    // const extensionSettings = response.settings as ExtensionSettings;
-    setupAppContent();
-    setupTagImageId();
-
-    copyTag();
-});
+setupToolBar();
+setupTagImagePairs();

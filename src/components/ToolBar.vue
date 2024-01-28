@@ -2,22 +2,70 @@
 import { onMounted, ref } from 'vue';
 import { ElCheckboxButton, ElCheckboxGroup, ElIcon, ElInputNumber, ElRow } from 'element-plus';
 import { Box, Paperclip, Star } from '@element-plus/icons-vue';
-import { filterByMarks } from '@/content-scripts/filterPopularTags';
-import { rearrangeImages } from '@/utils/dom-control';
+import { getAllTagTdElements, getAllImageTdElements } from '@/utils/dom-control';
 
 const imagesPerRow = ref(5);
 
-onMounted(() => rearrangeImages(imagesPerRow.value));
+onMounted(() => rearrangeImages());
 
 const checkboxGroup = ref([]);
 
-const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
-    filterByMarks(filterMarks);
-    rearrangeImages(imagesPerRow.value);
+const rearrangeImages = async () => {
+    const tagTDs = [...getAllTagTdElements()];
+    const imageTDs = [...getAllImageTdElements()];
+
+    // 指定枚数でtrを再構築する
+    const newRows: HTMLElement[] = [];
+    let currentTagIndex = 0;
+    while (currentTagIndex < tagTDs.length) {
+        const tagTR = document.createElement('tr');
+        const imageTR = document.createElement('tr');
+
+        // trにタグと画像のtdを詰めていく
+        let imageCount = 0;
+        while (imageCount < imagesPerRow.value && currentTagIndex < tagTDs.length) {
+            const filterByMarks = (td: HTMLTableCellElement) => {
+                if (!checkboxGroup.value.length) {
+                    td.style.display = '';
+                } else if (checkboxGroup.value.every((mark) => td.classList.contains(mark))) {
+                    td.style.display = '';
+                } else {
+                    td.style.display = 'none';
+                }
+            };
+
+            const tagTd = tagTDs[currentTagIndex]!;
+            filterByMarks(tagTd);
+            tagTR.appendChild(tagTd);
+
+            const imageTd = imageTDs[currentTagIndex]!;
+            filterByMarks(imageTd);
+            imageTR.appendChild(imageTd);
+
+            // フィルタ非表示画像も再表示時の保持用に詰めるが、1行あたりの枚数にカウントしない
+            if (tagTd.style.display !== 'none') {
+                imageCount++;
+            }
+
+            currentTagIndex++;
+        }
+
+        newRows.push(tagTR, imageTR);
+    }
+
+    const table = document.querySelector('table')!;
+    table.innerHTML = '';
+    newRows.forEach((tr) => {
+        table.appendChild(tr);
+    });
+};
+
+const onCheckChagend = () => {
+    rearrangeImages();
 };
 
 const onImagesPerRowChange = () => {
-    rearrangeImages(imagesPerRow.value);
+    rearrangeImages();
 };
 </script>
 
@@ -28,7 +76,7 @@ const onImagesPerRowChange = () => {
                 class="pt-2"
                 v-model="checkboxGroup"
                 size="large"
-                @change="onCheckChagend(checkboxGroup)"
+                @change="onCheckChagend"
             >
                 <ElCheckboxButton label="popular">
                     <ElIcon :size="15"><Box /></ElIcon>

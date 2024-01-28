@@ -3,7 +3,7 @@ import 'element-plus/dist/index.css';
 import '@/styles/content.css';
 import ToolBar from '@/components/ToolBar.vue';
 
-export const setupAppContent = () => {
+export const setupToolBar = () => {
     // vueのマウント先を追加
     const appRootId = 'app';
     const appRoot = document.createElement('div');
