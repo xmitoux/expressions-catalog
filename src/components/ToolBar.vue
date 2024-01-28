@@ -12,7 +12,7 @@ import {
     ElScrollbar,
 } from 'element-plus';
 import { Box, Paperclip, Star } from '@element-plus/icons-vue';
-import { filterPopularTags } from '@/content-scripts/filterPopularTags';
+import { filterByMarks } from '@/content-scripts/filterPopularTags';
 import { rearrangeImages } from '@/utils/dom-control';
 
 const imagesPerRow = ref(5);
@@ -21,8 +21,8 @@ onMounted(() => rearrangeImages(imagesPerRow.value));
 
 const checkboxGroup = ref([]);
 
-const onCheckChagend = () => {
-    filterPopularTags(checkboxGroup.value.some((checkLabel) => checkLabel === 'popular'));
+const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
+    filterByMarks(filterMarks);
     rearrangeImages(imagesPerRow.value);
 };
 
@@ -39,15 +39,15 @@ const onImagesPerRowChange = () => {
                     class="pt-2"
                     v-model="checkboxGroup"
                     size="large"
-                    @change="onCheckChagend"
+                    @change="onCheckChagend(checkboxGroup)"
                 >
                     <ElCheckboxButton label="popular">
                         <ElIcon :size="15"><Box /></ElIcon>
                     </ElCheckboxButton>
-                    <ElCheckboxButton label="star">
+                    <ElCheckboxButton label="🌟">
                         <ElIcon :size="15"><Star /></ElIcon>
                     </ElCheckboxButton>
-                    <ElCheckboxButton label="clip">
+                    <ElCheckboxButton label="📎">
                         <ElIcon :size="15"><Paperclip /></ElIcon>
                     </ElCheckboxButton>
                 </ElCheckboxGroup>

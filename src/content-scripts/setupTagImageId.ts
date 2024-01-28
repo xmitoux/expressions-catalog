@@ -19,6 +19,6 @@ export const setupTagImageId = (): void => {
         imageTd.id = `${tagName}-image`;
         isPopularTag && imageTd.classList.add('popular');
 
-        getStorage(({ filterMark }) => setupFilterMarks(imageTd, filterMark));
+        getStorage(({ filterMark }) => setupFilterMarks(tagTd, imageTd, filterMark));
     });
 };

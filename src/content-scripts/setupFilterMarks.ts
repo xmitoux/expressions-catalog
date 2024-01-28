@@ -1,8 +1,11 @@
 import { getStorage, saveStorage } from '@/utils/chrome-api';
-import { getTagNameFromImageId } from '@/utils/utils';
 
-export const setupFilterMarks = (imageTd: HTMLTableCellElement, filterMark: FilterMark) => {
-    const tagName = getTagNameFromImageId(imageTd.id);
+export const setupFilterMarks = (
+    tagTd: HTMLTableCellElement,
+    imageTd: HTMLTableCellElement,
+    filterMark: FilterMark,
+) => {
+    const tagName = tagTd.id;
 
     const checkboxContainer = document.createElement('div');
     checkboxContainer.className = 'checkbox-container';
@@ -16,6 +19,11 @@ export const setupFilterMarks = (imageTd: HTMLTableCellElement, filterMark: Filt
         checkbox.className = 'image-checkbox';
         checkbox.checked = !!filterMark[tagName]?.includes(icon);
 
+        if (checkbox.checked) {
+            tagTd.classList.add(icon);
+            imageTd.classList.add(icon);
+        }
+
         checkbox.addEventListener(
             'change',
             (event) => {
@@ -25,12 +33,14 @@ export const setupFilterMarks = (imageTd: HTMLTableCellElement, filterMark: Filt
 
                     if ((event.target! as HTMLInputElement).checked) {
                         filterMark[tagName]!.push(icon);
+                        tagTd.classList.add(icon);
                         imageTd.classList.add(icon);
                     } else {
                         const index = filterMark[tagName]!.indexOf(icon);
                         if (index > -1) {
                             filterMark[tagName]!.splice(index, 1);
                         }
+                        tagTd.classList.remove(icon);
                         imageTd.classList.remove(icon);
                     }
                     saveStorage({ filterMark });

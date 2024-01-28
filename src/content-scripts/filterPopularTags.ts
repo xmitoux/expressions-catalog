@@ -1,6 +1,12 @@
-export const filterPopularTags = (filter: boolean) => {
-    const nonPopularTds = document.querySelectorAll<HTMLElement>('td:not(.popular)[id]');
-    nonPopularTds.forEach((td) => {
-        td.style.display = filter ? 'none' : '';
+export const filterByMarks = (filterMarks: FilterMarkChar[]) => {
+    const tds = document.querySelectorAll<HTMLTableCellElement>('td[id]');
+    tds.forEach((td) => {
+        if (!filterMarks.length) {
+            td.style.display = '';
+        } else if (filterMarks.every((mark) => td.classList.contains(mark))) {
+            td.style.display = '';
+        } else {
+            td.style.display = 'none';
+        }
     });
 };
