@@ -73,18 +73,18 @@ const onImagesPerRowChange = () => {
     <div class="toolbar">
         <ElRow align="middle" justify="center">
             <ElCheckboxGroup
-                class="pt-2"
                 v-model="checkboxGroup"
+                class="pt-2"
                 size="large"
                 @change="onCheckChagend"
             >
                 <ElCheckboxButton label="popular">
                     <ElIcon :size="15"><Box /></ElIcon>
                 </ElCheckboxButton>
-                <ElCheckboxButton label="🌟">
+                <ElCheckboxButton label="star">
                     <ElIcon :size="15"><Star /></ElIcon>
                 </ElCheckboxButton>
-                <ElCheckboxButton label="📎">
+                <ElCheckboxButton label="clip">
                     <ElIcon :size="15"><Paperclip /></ElIcon>
                 </ElCheckboxButton>
             </ElCheckboxGroup>

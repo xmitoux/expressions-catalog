@@ -90,10 +90,10 @@ const copyTagName = async () => {
             @change="onCheckChagend(checkboxGroup)"
             @click="onClickCheckbox"
         >
-            <ElCheckboxButton label="🌟">
+            <ElCheckboxButton label="star">
                 <ElIcon :size="15"><Star /></ElIcon>
             </ElCheckboxButton>
-            <ElCheckboxButton label="📎">
+            <ElCheckboxButton label="clip">
                 <ElIcon :size="15"><Paperclip /></ElIcon>
             </ElCheckboxButton>
         </ElCheckboxGroup>
