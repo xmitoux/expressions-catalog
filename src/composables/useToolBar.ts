@@ -1,3 +1,4 @@
+import { getStorage } from '@/utils/chrome-api';
 import { getAllTagTdElements, getAllImageTdElements } from '@/utils/dom-control';
 
 export const useToolBar = () => {
@@ -64,22 +65,32 @@ export const useToolBar = () => {
         const filteredtagTds = getAllTagTdElements().filter((td) => td.style.display !== 'none');
         const ids = filteredtagTds.map((td) => td.id);
         const textData = ids.join('\n');
+        downloadText(textData, 'expressions');
+    };
 
-        // テキストデータをBlobとしてダウンロード用に準備
-        const blob = new Blob([textData], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'expressions.txt';
-        a.click();
-
-        // URLをクリーンアップ
-        URL.revokeObjectURL(url);
+    const exportFilter = () => {
+        getStorage(({ filterMarksString }) => {
+            downloadText(filterMarksString, 'expressions-filter', 'json');
+        });
     };
 
     return {
         rearrangeImages,
         changeUnnecessaryElementsVisible,
         downloadTags,
+        exportFilter,
     };
+};
+
+const downloadText = (textData: string, fileName: string, extension: string = 'txt') => {
+    // テキストデータをBlobとしてダウンロード用に準備
+    const blob = new Blob([textData], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileName}.${extension}`;
+    a.click();
+
+    // URLをクリーンアップ
+    URL.revokeObjectURL(url);
 };

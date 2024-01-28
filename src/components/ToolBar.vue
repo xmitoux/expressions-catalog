@@ -10,7 +10,8 @@ import {
 } from 'element-plus';
 import { Box, Download, Hide, Paperclip, Star } from '@element-plus/icons-vue';
 import { useToolBar } from '@/composables/useToolBar';
-const { rearrangeImages, changeUnnecessaryElementsVisible, downloadTags } = useToolBar();
+const { rearrangeImages, changeUnnecessaryElementsVisible, downloadTags, exportFilter } =
+    useToolBar();
 
 const imagesPerRow = ref(5);
 const checkboxGroup = ref<FilterMarkChar[]>([]);
@@ -66,6 +67,7 @@ const onImagesPerRowChange = () => {
             />
 
             <ElButton :icon="Download" type="primary" @click="downloadTags">Download Tags</ElButton>
+            <ElButton :icon="Download" type="primary" @click="exportFilter">Export Filter</ElButton>
         </ElRow>
     </div>
 </template>
