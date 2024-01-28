@@ -22,7 +22,7 @@ export const setupTagImageId = (): void => {
             imageTd.id = `${tagName}-image`;
             isPopularTag && imageTd.classList.add('popular');
 
-            setupFilterMarks(tagTd, imageTd, settingFilterMarks, index);
+            setupFilterMarks(tagTd, imageTd, settingFilterMarks);
         });
     });
 };

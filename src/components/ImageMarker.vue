@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { ElCheckboxButton, ElCheckboxGroup, ElIcon } from 'element-plus';
 import { Paperclip, Star } from '@element-plus/icons-vue';
 import { getStorage, saveStorage } from '@/utils/chrome-api';
+import { escapeSelector } from '@/utils/utils';
 
 const props = defineProps<{
     tagName: string;
@@ -17,6 +18,8 @@ onMounted(() => {
     checkboxGroup.value = props.initialMarks || [];
     props.tagTd.classList.add(...checkboxGroup.value);
     props.imageTd.classList.add(...checkboxGroup.value);
+
+    injectImageElement();
 });
 
 const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
@@ -44,23 +47,37 @@ const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
 };
 
 const onClickCheckbox = (event: Event) => event.stopPropagation();
+
+const isHovered = ref(false);
+
+const image = ref<HTMLDivElement>();
+const injectImageElement = () => {
+    const imageElement = document.querySelector(`#${escapeSelector(props.tagName)}-image img`);
+    if (imageElement && image.value) {
+        image.value.appendChild(imageElement);
+    }
+};
 </script>
 
 <template>
-    <ElCheckboxGroup
-        class="pt-2 checkbox-container"
-        v-model="checkboxGroup"
-        size="large"
-        @change="onCheckChagend(checkboxGroup)"
-        @click="onClickCheckbox"
-    >
-        <ElCheckboxButton label="🌟">
-            <ElIcon :size="15"><Star /></ElIcon>
-        </ElCheckboxButton>
-        <ElCheckboxButton label="📎">
-            <ElIcon :size="15"><Paperclip /></ElIcon>
-        </ElCheckboxButton>
-    </ElCheckboxGroup>
+    <div @mouseover="isHovered = true" @mouseleave="isHovered = false">
+        <ElCheckboxGroup
+            v-show="isHovered"
+            v-model="checkboxGroup"
+            class="pt-3 pr-3 checkbox-container"
+            size="small"
+            @change="onCheckChagend(checkboxGroup)"
+            @click="onClickCheckbox"
+        >
+            <ElCheckboxButton label="🌟">
+                <ElIcon :size="15"><Star /></ElIcon>
+            </ElCheckboxButton>
+            <ElCheckboxButton label="📎">
+                <ElIcon :size="15"><Paperclip /></ElIcon>
+            </ElCheckboxButton>
+        </ElCheckboxGroup>
+        <div ref="image"></div>
+    </div>
 </template>
 
 <style scoped>
@@ -76,20 +93,5 @@ const onClickCheckbox = (event: Event) => event.stopPropagation();
     display: inline-flex;
     align-items: center;
     margin: 0.5em;
-}
-
-/* 親要素にposition: relative;を追加 */
-td:has(img) {
-    position: relative;
-}
-
-.image-checkbox {
-    margin-right: 0.5em;
-    display: none;
-}
-
-.image-checkbox + label {
-    cursor: pointer;
-    user-select: none; /* テキスト選択を防止 */
 }
 </style>
