@@ -1,3 +1,4 @@
-type ExtensionSettings = { template: string };
+type FilterMarkChar = 'popular' | 'star' | 'clip';
 
-type ImageTagMap = Map<string, string>;
+type FilterMark = Record<string, string[]>;
+type ExtensionSettings = { filterMarksString: string };

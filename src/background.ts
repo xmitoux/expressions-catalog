@@ -1,8 +1,6 @@
 import { ACTION_GET_SETTINGS } from './constants/chrome-api';
 
-const defaultSettings: ExtensionSettings = {
-    template: 'This is template setting. Be sure to modify it.',
-};
+const defaultSettings: ExtensionSettings = { filterMarksString: '{}' };
 
 chrome.action.onClicked.addListener(() => {
     chrome.tabs.create({ url: 'index.html' });
