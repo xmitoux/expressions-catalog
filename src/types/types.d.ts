@@ -1,4 +1,5 @@
 type FilterMarkChar = 'popular' | 'star' | 'clip';
 
-type FilterMark = Record<string, string[]>;
-type ExtensionSettings = { filterMarksString: string };
+type TagSetting = { filterMarksJson: string };
+type TagsSettings = Record<string, TagSetting>;
+type ExtensionSettings = { tagsSettings: TagsSettings };

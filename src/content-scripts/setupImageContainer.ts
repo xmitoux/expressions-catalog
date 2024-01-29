@@ -4,7 +4,11 @@ import '@/styles/content.css';
 import ImageContainer from '@/components/ImageContainer.vue';
 import { escapeSelector } from '@/utils/utils';
 
-export const setupImageContainer = (tagTd: HTMLTableCellElement, filterMark: FilterMark) => {
+export const setupImageContainer = (
+    tagTd: HTMLTableCellElement,
+    imageTd: HTMLTableCellElement,
+    filterMarksJson: string,
+) => {
     const tagName = tagTd.id;
 
     // vueのマウント先を追加
@@ -13,14 +17,13 @@ export const setupImageContainer = (tagTd: HTMLTableCellElement, filterMark: Fil
     appRoot.id = appRootId;
 
     // 画像tdの子にvueをマウント
-    const imageTd = document.querySelector(`#${escapeSelector(tagName)}-image`)!;
     imageTd.prepend(appRoot);
 
     const app = createApp(ImageContainer, {
         tagName,
         tagTd,
         imageTd,
-        initialMarks: filterMark[tagName],
+        initialMarks: JSON.parse(filterMarksJson),
     });
 
     app.mount(`#${escapeSelector(appRootId)}`);

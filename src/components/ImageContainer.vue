@@ -9,13 +9,13 @@ const props = defineProps<{
     tagName: string;
     tagTd: HTMLTableCellElement;
     imageTd: HTMLTableCellElement;
-    initialMarks?: FilterMarkChar[];
+    initialMarks: FilterMarkChar[];
 }>();
 
 const checkboxGroup = ref<FilterMarkChar[]>([]);
 
 onMounted(() => {
-    checkboxGroup.value = props.initialMarks || [];
+    checkboxGroup.value = props.initialMarks;
     props.tagTd.classList.add(...checkboxGroup.value);
     props.imageTd.classList.add(...checkboxGroup.value);
 
@@ -23,11 +23,17 @@ onMounted(() => {
 });
 
 const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
-    getStorage(({ filterMarksString }) => {
-        const settingFilterMarks = JSON.parse(filterMarksString);
+    getStorage(({ tagsSettings }) => {
+        if (!tagsSettings[props.tagName]) {
+            // 初めてマークするタグはプロパティがないので初期化
+            const initialTagSetting: TagSetting = {
+                filterMarksJson: '[]',
+            };
+            tagsSettings[props.tagName] = initialTagSetting;
+        }
 
-        settingFilterMarks[props.tagName] = filterMarks;
-        saveStorage({ filterMarksString: JSON.stringify(settingFilterMarks) });
+        tagsSettings[props.tagName]!.filterMarksJson = JSON.stringify(filterMarks);
+        saveStorage({ tagsSettings });
 
         const tagTd = props.tagTd;
         const imageTd = props.imageTd;

@@ -6,8 +6,8 @@ export const setupTagImagePairs = (): void => {
     const tagTdElements = getAllTagTdElements();
     const imageTdElements = getAllImageTdElements();
 
-    getStorage(({ filterMarksString }) => {
-        const initTagImagePair = (tagTd: HTMLTableCellElement, index: number) => {
+    getStorage(({ tagsSettings }) => {
+        const initTagImagePair = (tagTd: HTMLTableCellElement, imageTd: HTMLTableCellElement) => {
             // タグにidを設定
             const tagName = tagTd.querySelector('code')!.textContent!;
             tagTd.id = tagName;
@@ -17,16 +17,17 @@ export const setupTagImagePairs = (): void => {
             isPopularTag && tagTd.classList.add('popular');
 
             // 画像にidとpopularを設定
-            const imageTd = imageTdElements[index]!;
             imageTd.id = `${tagName}-image`;
             isPopularTag && imageTd.classList.add('popular');
         };
 
         tagTdElements.forEach((tagTd, index) => {
-            initTagImagePair(tagTd, index);
+            const imageTd = imageTdElements[index]!;
+            initTagImagePair(tagTd, imageTd);
 
-            const settingFilterMarks = JSON.parse(filterMarksString);
-            setupImageContainer(tagTd, settingFilterMarks);
+            const tagName = tagTd.id;
+            const filterMarksJson = tagsSettings[tagName]?.filterMarksJson || '[]';
+            setupImageContainer(tagTd, imageTd, filterMarksJson);
         });
     });
 };
