@@ -1,76 +1,35 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { ElCheckboxButton, ElCheckboxGroup, ElIcon, ElInputNumber, ElRow } from 'element-plus';
-import { Box, Hide, Paperclip, Star } from '@element-plus/icons-vue';
-import { getAllTagTdElements, getAllImageTdElements } from '@/utils/dom-control';
+import {
+    ElButton,
+    ElCheckboxButton,
+    ElCheckboxGroup,
+    ElIcon,
+    ElInputNumber,
+    ElMessageBox,
+    ElRow,
+    ElUpload,
+    UploadRequestHandler,
+    UploadRequestOptions,
+    UploadUserFile,
+} from 'element-plus';
+import { Box, Download, Hide, Paperclip, PriceTag, Star, Upload } from '@element-plus/icons-vue';
+import { useToolBar } from '@/composables/useToolBar';
+const {
+    rearrangeImages,
+    changeUnnecessaryElementsVisible,
+    downloadTags,
+    exportFilter,
+    importFilter,
+} = useToolBar();
 
 const imagesPerRow = ref(5);
+const checkboxGroup = ref<FilterMarkChar[]>([]);
 
 onMounted(() => {
     changeUnnecessaryElementsVisible(true);
-    rearrangeImages();
+    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
 });
-
-const checkboxGroup = ref<FilterMarkChar[]>([]);
-
-const rearrangeImages = async () => {
-    const tagTDs = [...getAllTagTdElements()];
-    const imageTDs = [...getAllImageTdElements()];
-
-    // 指定枚数でtrを再構築する
-    const newRows: HTMLElement[] = [];
-    let currentTagIndex = 0;
-    while (currentTagIndex < tagTDs.length) {
-        const tagTR = document.createElement('tr');
-        const imageTR = document.createElement('tr');
-
-        // trにタグと画像のtdを詰めていく
-        let imageCount = 0;
-        while (imageCount < imagesPerRow.value && currentTagIndex < tagTDs.length) {
-            const filterByMarks = (td: HTMLTableCellElement) => {
-                if (!checkboxGroup.value.length) {
-                    td.style.display = '';
-                } else if (checkboxGroup.value.every((mark) => td.classList.contains(mark))) {
-                    td.style.display = '';
-                } else {
-                    td.style.display = 'none';
-                }
-            };
-
-            const tagTd = tagTDs[currentTagIndex]!;
-            filterByMarks(tagTd);
-            tagTR.appendChild(tagTd);
-
-            const imageTd = imageTDs[currentTagIndex]!;
-            filterByMarks(imageTd);
-            imageTR.appendChild(imageTd);
-
-            // フィルタ非表示画像も再表示時の保持用に詰めるが、1行あたりの枚数にカウントしない
-            if (tagTd.style.display !== 'none') {
-                imageCount++;
-            }
-
-            currentTagIndex++;
-        }
-
-        newRows.push(tagTR, imageTR);
-    }
-
-    const table = document.querySelector('table')!;
-    table.innerHTML = '';
-    newRows.forEach((tr) => {
-        table.appendChild(tr);
-    });
-};
-
-const changeUnnecessaryElementsVisible = (hide: boolean) => {
-    const actionIcon = document.querySelector<HTMLDivElement>('.actions')!;
-    actionIcon.style.display = hide ? 'none' : '';
-    const paragraphElements = document.querySelectorAll<HTMLParagraphElement>('article p');
-    paragraphElements.forEach((el) => {
-        el.style.display = hide ? 'none' : '';
-    });
-};
 
 const hideCheckbox = ref(['hide']);
 const hide = computed(() => !!hideCheckbox.value.length);
@@ -79,11 +38,24 @@ const onHideCheckChagend = () => {
 };
 
 const onCheckChagend = () => {
-    rearrangeImages();
+    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
 };
 
 const onImagesPerRowChange = () => {
-    rearrangeImages();
+    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+};
+
+const fileList = ref<UploadUserFile[]>([]);
+const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => {
+    await importFilter(options.file);
+
+    ElMessageBox.alert(
+        'Filter settings imported. Please reload the page to apply changes.',
+        'Info',
+        {
+            confirmButtonText: 'OK',
+        },
+    );
 };
 </script>
 
@@ -116,6 +88,19 @@ const onImagesPerRowChange = () => {
                 :max="10"
                 @change="onImagesPerRowChange"
             />
+
+            <ElButton :icon="PriceTag" type="primary" @click="downloadTags">Download Tags</ElButton>
+
+            <ElButton :icon="Download" type="primary" @click="exportFilter">Export Filter</ElButton>
+            <ElUpload
+                v-model:file-list="fileList"
+                accept="json"
+                :auto-upload="true"
+                :show-file-list="false"
+                :http-request="onUpload"
+            >
+                <ElButton :icon="Upload" type="primary">Import Filter</ElButton>
+            </ElUpload>
         </ElRow>
     </div>
 </template>
