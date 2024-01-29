@@ -6,12 +6,22 @@ import {
     ElCheckboxGroup,
     ElIcon,
     ElInputNumber,
+    ElMessageBox,
     ElRow,
+    ElUpload,
+    UploadRequestHandler,
+    UploadRequestOptions,
+    UploadUserFile,
 } from 'element-plus';
-import { Box, Download, Hide, Paperclip, Star } from '@element-plus/icons-vue';
+import { Box, Download, Hide, Paperclip, PriceTag, Star, Upload } from '@element-plus/icons-vue';
 import { useToolBar } from '@/composables/useToolBar';
-const { rearrangeImages, changeUnnecessaryElementsVisible, downloadTags, exportFilter } =
-    useToolBar();
+const {
+    rearrangeImages,
+    changeUnnecessaryElementsVisible,
+    downloadTags,
+    exportFilter,
+    importFilter,
+} = useToolBar();
 
 const imagesPerRow = ref(5);
 const checkboxGroup = ref<FilterMarkChar[]>([]);
@@ -33,6 +43,19 @@ const onCheckChagend = () => {
 
 const onImagesPerRowChange = () => {
     rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+};
+
+const fileList = ref<UploadUserFile[]>([]);
+const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => {
+    await importFilter(options.file);
+
+    ElMessageBox.alert(
+        'Filter settings imported. Please reload the page to apply changes.',
+        'Info',
+        {
+            confirmButtonText: 'OK',
+        },
+    );
 };
 </script>
 
@@ -66,8 +89,18 @@ const onImagesPerRowChange = () => {
                 @change="onImagesPerRowChange"
             />
 
-            <ElButton :icon="Download" type="primary" @click="downloadTags">Download Tags</ElButton>
+            <ElButton :icon="PriceTag" type="primary" @click="downloadTags">Download Tags</ElButton>
+
             <ElButton :icon="Download" type="primary" @click="exportFilter">Export Filter</ElButton>
+            <ElUpload
+                v-model:file-list="fileList"
+                accept="json"
+                :auto-upload="true"
+                :show-file-list="false"
+                :http-request="onUpload"
+            >
+                <ElButton :icon="Upload" type="primary">Import Filter</ElButton>
+            </ElUpload>
         </ElRow>
     </div>
 </template>

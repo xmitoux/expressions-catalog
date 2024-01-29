@@ -1,4 +1,4 @@
-import { getStorage } from '@/utils/chrome-api';
+import { getStorage, saveStorage } from '@/utils/chrome-api';
 import { getAllTagTdElements, getAllImageTdElements } from '@/utils/dom-control';
 
 export const useToolBar = () => {
@@ -74,11 +74,26 @@ export const useToolBar = () => {
         });
     };
 
+    const importFilter = (file: File) => {
+        return new Promise<void>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const filterJson = event.target?.result as string;
+                saveStorage({ filterMarksString: filterJson });
+                resolve();
+            };
+
+            reader.onerror = (error) => reject(error);
+            reader.readAsText(file);
+        });
+    };
+
     return {
         rearrangeImages,
         changeUnnecessaryElementsVisible,
         downloadTags,
         exportFilter,
+        importFilter,
     };
 };
 
