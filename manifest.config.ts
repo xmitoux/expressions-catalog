@@ -1,7 +1,7 @@
 import { defineManifest } from '@crxjs/vite-plugin';
 import pkg from './package.json';
 
-const extensionName = 'NAI Expressions Viewer';
+const extensionName = 'Expressions Catalog';
 
 export const manifest = defineManifest((env) => ({
     manifest_version: 3,
