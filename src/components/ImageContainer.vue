@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { ElCheckboxButton, ElCheckboxGroup, ElIcon, ElMessage } from 'element-plus';
-import { Paperclip, Star } from '@element-plus/icons-vue';
+import { Hide, Paperclip, Star } from '@element-plus/icons-vue';
 import { getStorage, saveStorage } from '@/utils/chrome-api';
 import { escapeSelector } from '@/utils/utils';
 
@@ -35,20 +35,18 @@ const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
         tagsSettings[props.tagName]!.filterMarksJson = JSON.stringify(filterMarks);
         saveStorage({ tagsSettings });
 
-        const tagTd = props.tagTd;
-        const imageTd = props.imageTd;
-
         // popular以外を置換用に全削除
-        tagTd.classList.forEach((mark) => {
+        const classListOrg = [...props.tagTd.classList];
+        classListOrg.forEach((mark) => {
             if (mark !== 'popular') {
-                tagTd.classList.remove(mark);
-                imageTd.classList.remove(mark);
+                props.tagTd.classList.remove(mark);
+                props.imageTd.classList.remove(mark);
             }
         });
 
         // チェックされたマークをclassに追加
-        tagTd.classList.add(...filterMarks);
-        imageTd.classList.add(...filterMarks);
+        props.tagTd.classList.add(...filterMarks);
+        props.imageTd.classList.add(...filterMarks);
     });
 };
 
@@ -101,6 +99,9 @@ const copyTagName = async () => {
             </ElCheckboxButton>
             <ElCheckboxButton label="clip">
                 <ElIcon :size="15"><Paperclip /></ElIcon>
+            </ElCheckboxButton>
+            <ElCheckboxButton label="mute">
+                <ElIcon :size="15"><Hide /></ElIcon>
             </ElCheckboxButton>
         </ElCheckboxGroup>
         <div ref="imageContainer"></div>

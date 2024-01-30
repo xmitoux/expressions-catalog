@@ -1,4 +1,4 @@
-type FilterMarkChar = 'popular' | 'star' | 'clip';
+type FilterMarkChar = 'popular' | 'star' | 'clip' | 'mute';
 
 type TagSetting = { filterMarksJson: string };
 type TagsSettings = Record<string, TagSetting>;

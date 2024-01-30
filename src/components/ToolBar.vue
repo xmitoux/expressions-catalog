@@ -13,36 +13,39 @@ import {
     UploadRequestOptions,
     UploadUserFile,
 } from 'element-plus';
-import { Box, Download, Hide, Paperclip, PriceTag, Star, Upload } from '@element-plus/icons-vue';
+import {
+    Box,
+    Download,
+    Hide,
+    InfoFilled,
+    Paperclip,
+    PriceTag,
+    Star,
+    Upload,
+} from '@element-plus/icons-vue';
 import { useToolBar } from '@/composables/useToolBar';
-const {
-    rearrangeImages,
-    changeUnnecessaryElementsVisible,
-    downloadTags,
-    exportFilter,
-    importFilter,
-} = useToolBar();
+const { filterImages, showInfoContents, downloadTags, exportFilter, importFilter } = useToolBar();
 
 const imagesPerRow = ref(5);
 const checkboxGroup = ref<FilterMarkChar[]>([]);
 
 onMounted(() => {
-    changeUnnecessaryElementsVisible(true);
-    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+    showInfoContents(false);
+    filterImages(imagesPerRow.value, checkboxGroup.value);
 });
 
-const hideCheckbox = ref(['hide']);
-const hide = computed(() => !!hideCheckbox.value.length);
+const infoCheckbox = ref([]);
+const showInfo = computed(() => infoCheckbox.value.length !== 0);
 const onHideCheckChagend = () => {
-    changeUnnecessaryElementsVisible(hide.value);
+    showInfoContents(showInfo.value);
 };
 
 const onCheckChagend = () => {
-    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+    filterImages(imagesPerRow.value, checkboxGroup.value);
 };
 
 const onImagesPerRowChange = () => {
-    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+    filterImages(imagesPerRow.value, checkboxGroup.value);
 };
 
 const fileList = ref<UploadUserFile[]>([]);
@@ -62,9 +65,9 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
 <template>
     <div class="toolbar">
         <ElRow align="middle" justify="center">
-            <ElCheckboxGroup v-model="hideCheckbox" class="pt-2" @change="onHideCheckChagend">
-                <ElCheckboxButton class="mr-2" label="hide">
-                    <ElIcon :size="15"><Hide /></ElIcon>
+            <ElCheckboxGroup v-model="infoCheckbox" class="pt-2" @change="onHideCheckChagend">
+                <ElCheckboxButton class="mr-2" label="info">
+                    <ElIcon :size="15"><InfoFilled /></ElIcon>
                 </ElCheckboxButton>
             </ElCheckboxGroup>
 
@@ -77,6 +80,9 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
                 </ElCheckboxButton>
                 <ElCheckboxButton label="clip">
                     <ElIcon :size="15"><Paperclip /></ElIcon>
+                </ElCheckboxButton>
+                <ElCheckboxButton label="mute">
+                    <ElIcon :size="15"><Hide /></ElIcon>
                 </ElCheckboxButton>
             </ElCheckboxGroup>
 
@@ -91,7 +97,7 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
 
             <ElButton :icon="PriceTag" type="primary" @click="downloadTags">Download Tags</ElButton>
 
-            <ElButton :icon="Download" type="primary" @click="exportFilter">Export Filter</ElButton>
+            <ElButton :icon="Upload" type="primary" @click="exportFilter">Export Filter</ElButton>
             <ElUpload
                 v-model:file-list="fileList"
                 accept="json"
@@ -99,7 +105,7 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
                 :show-file-list="false"
                 :http-request="onUpload"
             >
-                <ElButton :icon="Upload" type="primary">Import Filter</ElButton>
+                <ElButton :icon="Download" type="primary">Import Filter</ElButton>
             </ElUpload>
         </ElRow>
     </div>
@@ -113,7 +119,7 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
     margin: 0;
     width: 100%;
     padding: 10px;
-    background: linear-gradient(315deg, rgb(36, 155, 115) 25%, rgb(0, 24, 144));
+    background: linear-gradient(315deg, rgb(36, 155, 115, 0.8) 25%, rgb(0, 24, 144, 0.8));
     z-index: 1000;
 }
 </style>
