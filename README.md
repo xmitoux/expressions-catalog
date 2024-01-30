@@ -35,7 +35,7 @@ https://github.com/xmitoux/expressions-catalog/assets/20333701/861c6dfc-02d1-491
 - 解凍した拡張機能のフォルダ配下の`dist/assets/`に`<タグ名>.png`を置き、ページをリロードするとタグ名に対応する画像が置き換わります。
   - 例: `yukkuri shiteitte ne.png`
   - タグ名に以下の文字が含まれる場合は全角にしてください。
-    - 例: `\(^o^)/` → `＼（＾o＾）／.png`
+    - 例: `\(^o^)/` → `＼(＾o＾)／.png`
     - `<`
     - `>`
     - `:`
