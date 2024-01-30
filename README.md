@@ -1,49 +1,49 @@
-# Vue 3 Chrome拡張開発用テンプレート
-- Vue 3でChome拡張を開発するためのテンプレートリポジトリです。
-## 構成
-Vite + crxjs + Vue 3 + TypeScript + ESLint + Prettier
-## クイックスタート
-※パッケージ管理に`pnpm`を使用します。なければ[こちら](https://pnpm.io/ja/installation)からインストールしてください。
-```
-pnpm i
-pnpm run dev
-```
+# 😶Expressions Catalog📖
+表情タグ一覧を見やすくするChrome拡張です。
 
-## VSCode設定
-- エディタにはVSCodeを使用します。
-- 以下の拡張機能のインストールが必要です。
-  - Volar: Vueのコーディングに必須
-  - ESLint: JS, TS用のlinter
-  - Prettier: コードフォーマッタ
+# 📲インストール
+1. Releasesから`ExpressionsCatalog.zip`をダウンロードし、解凍します。
+2. Google ChromeのURL欄に`chrome://extensions/`と入力し、拡張機能の管理画面に移動します。
+3. 右上隅で「デベロッパーモード」をONにします。
+4. 「パッケージ化されていない拡張機能を読み込む」をクリックし、手順1.で解凍された`dist`フォルダを選択すると拡張機能がインストールされます。
+    - 再インストール時は前のバージョンを削除しておいてください。
 
-## crxjsバグ対応
-- ビルドができないバグがある
-  - https://github.com/crxjs/chrome-extension-tools/issues/836
-- `node_modules/@crxjs/dist/index.mjs`の101行目を以下のように修正する
-  ```js
-  const asset = bundle[key] || bundle[`.vite/${key};`];
-  ```
+# 🪄機能
+## タグコピー
+画像クリックで対応するタグをクリップボードにコピーします。
 
-<details>
-<summary>Vite Orginal README</summary>
+## 表示画像数変更
+ツールバーの数値入力欄で1行あたりの表示画像数を変更します。
 
-# Vue 3 + TypeScript + Vite
+## 画像のマーク・フィルタ
+- 画像をマウスオーバーすると`🌟|📎`ボタンが表示され、画像にマークを付けられます。
+  - マーク状態はブラウザを閉じても保持されます。
+- ツールバーの`🌟|📎`ボタンを押すとマークした画像のみを抽出表示します。
+- `📦`ボタンを押すと記事の説明で「投稿数が100件以上ある」とされている画像のみを抽出表示します。
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## タグダウンロード
+ツールバーの`Download Tags`ボタンを押すと、表示中(フィルタ中はフィルタ中)の画像に対応するタグをテキストファイルとしてダウンロードします。
 
-## Recommended IDE Setup
+## 画像置き換え
+- 各タグに対応する画像を好きな画像に置き換えることができます。
+- 解答した拡張機能のフォルダ配下の`dist/assets/`に`<タグ名>.png`を置き、ページをリロードするとタグ名に対応する画像が置き換わります。
+  - 例: `yukkuri shiteitte ne.png`
+  - タグ名に以下の文字が含まれる場合は全角にしてください。
+    - `<`
+    - `>`
+    - `:`
+    - `"`
+    - `/`
+    - `\`
+    - `|`
+    - `?`
+    - `*`
+    - `^`
+    - 例: `\(^o^)/` → `＼（＾o＾）／.png`
 
--   [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 上部コンテンツの非表示
+ツールバーの`👁`ボタンを押すと記事上部のコンテンツを非表示にします。
 
-## Type Support For `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-</details>
+## フィルタ設定のエクスポート・インポート
+- ツールバーの`Export Filter` `Import Filter`ボタンを押すと現在の画像マーク状態をエクスポート・インポートします。
+- 拡張機能を再インストールするとフィルタ状態がリセットされるため、事前にエクスポートし、再インストール後にインポートすることで状態を復元できます。
