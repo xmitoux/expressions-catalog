@@ -91,7 +91,7 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
 
             <ElButton :icon="PriceTag" type="primary" @click="downloadTags">Download Tags</ElButton>
 
-            <ElButton :icon="Download" type="primary" @click="exportFilter">Export Filter</ElButton>
+            <ElButton :icon="Upload" type="primary" @click="exportFilter">Export Filter</ElButton>
             <ElUpload
                 v-model:file-list="fileList"
                 accept="json"
@@ -99,7 +99,7 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
                 :show-file-list="false"
                 :http-request="onUpload"
             >
-                <ElButton :icon="Upload" type="primary">Import Filter</ElButton>
+                <ElButton :icon="Download" type="primary">Import Filter</ElButton>
             </ElUpload>
         </ElRow>
     </div>
