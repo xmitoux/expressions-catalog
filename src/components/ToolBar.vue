@@ -16,6 +16,7 @@ import {
 import {
     Box,
     Download,
+    Hide,
     InfoFilled,
     Paperclip,
     PriceTag,
@@ -23,15 +24,14 @@ import {
     Upload,
 } from '@element-plus/icons-vue';
 import { useToolBar } from '@/composables/useToolBar';
-const { rearrangeImages, showInfoContents, downloadTags, exportFilter, importFilter } =
-    useToolBar();
+const { filterImages, showInfoContents, downloadTags, exportFilter, importFilter } = useToolBar();
 
 const imagesPerRow = ref(5);
 const checkboxGroup = ref<FilterMarkChar[]>([]);
 
 onMounted(() => {
     showInfoContents(false);
-    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+    filterImages(imagesPerRow.value, checkboxGroup.value);
 });
 
 const infoCheckbox = ref([]);
@@ -41,11 +41,11 @@ const onHideCheckChagend = () => {
 };
 
 const onCheckChagend = () => {
-    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+    filterImages(imagesPerRow.value, checkboxGroup.value);
 };
 
 const onImagesPerRowChange = () => {
-    rearrangeImages(imagesPerRow.value, checkboxGroup.value);
+    filterImages(imagesPerRow.value, checkboxGroup.value);
 };
 
 const fileList = ref<UploadUserFile[]>([]);
@@ -80,6 +80,9 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
                 </ElCheckboxButton>
                 <ElCheckboxButton label="clip">
                     <ElIcon :size="15"><Paperclip /></ElIcon>
+                </ElCheckboxButton>
+                <ElCheckboxButton label="mute">
+                    <ElIcon :size="15"><Hide /></ElIcon>
                 </ElCheckboxButton>
             </ElCheckboxGroup>
 

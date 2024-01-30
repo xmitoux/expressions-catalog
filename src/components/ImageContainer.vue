@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { ElCheckboxButton, ElCheckboxGroup, ElIcon, ElMessage } from 'element-plus';
-import { Paperclip, Star } from '@element-plus/icons-vue';
+import { Hide, Paperclip, Star } from '@element-plus/icons-vue';
 import { getStorage, saveStorage } from '@/utils/chrome-api';
 import { escapeSelector } from '@/utils/utils';
 
@@ -101,6 +101,9 @@ const copyTagName = async () => {
             </ElCheckboxButton>
             <ElCheckboxButton label="clip">
                 <ElIcon :size="15"><Paperclip /></ElIcon>
+            </ElCheckboxButton>
+            <ElCheckboxButton label="mute">
+                <ElIcon :size="15"><Hide /></ElIcon>
             </ElCheckboxButton>
         </ElCheckboxGroup>
         <div ref="imageContainer"></div>

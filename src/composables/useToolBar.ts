@@ -2,7 +2,7 @@ import { getStorage, saveStorage } from '@/utils/chrome-api';
 import { getAllTagTdElements, getAllImageTdElements } from '@/utils/dom-control';
 
 export const useToolBar = () => {
-    const rearrangeImages = async (imagesPerRow: number, checkboxGroup: FilterMarkChar[]) => {
+    const filterImages = (imagesPerRow: number, checkboxGroup: FilterMarkChar[]) => {
         const tagTDs = [...getAllTagTdElements()];
         const imageTDs = [...getAllImageTdElements()];
 
@@ -13,15 +13,24 @@ export const useToolBar = () => {
             const tagTR = document.createElement('tr');
             const imageTR = document.createElement('tr');
 
-            // trにタグと画像のtdを詰めていく
+            // class名でフィルタしつつtrにタグと画像のtdを詰めていく
             let imageCount = 0;
             while (imageCount < imagesPerRow && currentTagIndex < tagTDs.length) {
                 const filterByMarks = (td: HTMLTableCellElement) => {
                     if (!checkboxGroup.length) {
                         td.style.display = '';
-                    } else if (checkboxGroup.every((mark) => td.classList.contains(mark))) {
+                    } else if (
+                        checkboxGroup
+                            .filter((mark) => mark !== 'mute')
+                            .every((mark) => td.classList.contains(mark))
+                    ) {
                         td.style.display = '';
                     } else {
+                        td.style.display = 'none';
+                    }
+
+                    // 抽出されてもmuteの非表示を優先
+                    if (checkboxGroup.includes('mute') && td.classList.contains('mute')) {
                         td.style.display = 'none';
                     }
                 };
@@ -104,7 +113,7 @@ export const useToolBar = () => {
     };
 
     return {
-        rearrangeImages,
+        filterImages,
         showInfoContents,
         downloadTags,
         exportFilter,
