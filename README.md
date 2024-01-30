@@ -1,8 +1,11 @@
+
 # 😶Expressions Catalog📖
 表情タグ一覧を見やすくするChrome拡張です。
 
 # 🎞️デモ
 タグコピー ⇒ 表示画像数変更 ⇒ 画像のマーク・フィルタ ⇒ 画像置き換え ⇒ 画像のミュート ⇒ タグダウンロード
+
+https://github.com/xmitoux/expressions-catalog/assets/20333701/861c6dfc-02d1-4919-a5b2-570c0e9ea8a0
 
 # 📲インストール
 1. Releasesから`ExpressionsCatalog.zip`をダウンロードし、解凍します。
