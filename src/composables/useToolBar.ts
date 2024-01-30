@@ -65,12 +65,12 @@ export const useToolBar = () => {
         });
     };
 
-    const changeUnnecessaryElementsVisible = (hide: boolean) => {
+    const showInfoContents = (show: boolean) => {
         const actionIcon = document.querySelector<HTMLDivElement>('.actions')!;
-        actionIcon.style.display = hide ? 'none' : '';
+        actionIcon.style.display = show ? '' : 'none';
         const paragraphElements = document.querySelectorAll<HTMLParagraphElement>('article p');
         paragraphElements.forEach((el) => {
-            el.style.display = hide ? 'none' : '';
+            el.style.display = show ? '' : 'none';
         });
     };
 
@@ -105,7 +105,7 @@ export const useToolBar = () => {
 
     return {
         rearrangeImages,
-        changeUnnecessaryElementsVisible,
+        showInfoContents,
         downloadTags,
         exportFilter,
         importFilter,

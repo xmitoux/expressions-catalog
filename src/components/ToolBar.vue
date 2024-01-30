@@ -13,28 +13,31 @@ import {
     UploadRequestOptions,
     UploadUserFile,
 } from 'element-plus';
-import { Box, Download, Hide, Paperclip, PriceTag, Star, Upload } from '@element-plus/icons-vue';
+import {
+    Box,
+    Download,
+    InfoFilled,
+    Paperclip,
+    PriceTag,
+    Star,
+    Upload,
+} from '@element-plus/icons-vue';
 import { useToolBar } from '@/composables/useToolBar';
-const {
-    rearrangeImages,
-    changeUnnecessaryElementsVisible,
-    downloadTags,
-    exportFilter,
-    importFilter,
-} = useToolBar();
+const { rearrangeImages, showInfoContents, downloadTags, exportFilter, importFilter } =
+    useToolBar();
 
 const imagesPerRow = ref(5);
 const checkboxGroup = ref<FilterMarkChar[]>([]);
 
 onMounted(() => {
-    changeUnnecessaryElementsVisible(true);
+    showInfoContents(false);
     rearrangeImages(imagesPerRow.value, checkboxGroup.value);
 });
 
-const hideCheckbox = ref(['hide']);
-const hide = computed(() => !!hideCheckbox.value.length);
+const infoCheckbox = ref([]);
+const showInfo = computed(() => infoCheckbox.value.length !== 0);
 const onHideCheckChagend = () => {
-    changeUnnecessaryElementsVisible(hide.value);
+    showInfoContents(showInfo.value);
 };
 
 const onCheckChagend = () => {
@@ -62,9 +65,9 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
 <template>
     <div class="toolbar">
         <ElRow align="middle" justify="center">
-            <ElCheckboxGroup v-model="hideCheckbox" class="pt-2" @change="onHideCheckChagend">
-                <ElCheckboxButton class="mr-2" label="hide">
-                    <ElIcon :size="15"><Hide /></ElIcon>
+            <ElCheckboxGroup v-model="infoCheckbox" class="pt-2" @change="onHideCheckChagend">
+                <ElCheckboxButton class="mr-2" label="info">
+                    <ElIcon :size="15"><InfoFilled /></ElIcon>
                 </ElCheckboxButton>
             </ElCheckboxGroup>
 
