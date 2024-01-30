@@ -113,7 +113,7 @@ const onUpload: UploadRequestHandler = async (options: UploadRequestOptions) => 
     margin: 0;
     width: 100%;
     padding: 10px;
-    background: linear-gradient(315deg, rgb(36, 155, 115) 25%, rgb(0, 24, 144));
+    background: linear-gradient(315deg, rgb(36, 155, 115, 0.8) 25%, rgb(0, 24, 144, 0.8));
     z-index: 1000;
 }
 </style>
