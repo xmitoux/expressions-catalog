@@ -19,7 +19,8 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "typeRoots": ["./node_modules/@types", "./types"],
+        "noUncheckedIndexedAccess": true,
+        "typeRoots": ["./node_modules/@types", "./types", "element-plus/global"],
 
         "baseUrl": ".",
         "paths": {
