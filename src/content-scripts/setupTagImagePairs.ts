@@ -23,6 +23,7 @@ export const setupTagImagePairs = (): void => {
                 '<': '＜',
                 '>': '＞',
                 '|': '｜',
+                '^': '＾',
             };
 
             return str
