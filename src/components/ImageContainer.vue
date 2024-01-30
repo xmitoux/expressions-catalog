@@ -35,20 +35,18 @@ const onCheckChagend = (filterMarks: FilterMarkChar[]) => {
         tagsSettings[props.tagName]!.filterMarksJson = JSON.stringify(filterMarks);
         saveStorage({ tagsSettings });
 
-        const tagTd = props.tagTd;
-        const imageTd = props.imageTd;
-
         // popular以外を置換用に全削除
-        tagTd.classList.forEach((mark) => {
+        const classListOrg = [...props.tagTd.classList];
+        classListOrg.forEach((mark) => {
             if (mark !== 'popular') {
-                tagTd.classList.remove(mark);
-                imageTd.classList.remove(mark);
+                props.tagTd.classList.remove(mark);
+                props.imageTd.classList.remove(mark);
             }
         });
 
         // チェックされたマークをclassに追加
-        tagTd.classList.add(...filterMarks);
-        imageTd.classList.add(...filterMarks);
+        props.tagTd.classList.add(...filterMarks);
+        props.imageTd.classList.add(...filterMarks);
     });
 };
 
