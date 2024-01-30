@@ -28,10 +28,23 @@ export const useToolBar = () => {
 
                 const tagTd = tagTDs[currentTagIndex]!;
                 filterByMarks(tagTd);
+
+                // タグの長さで列幅が変わらないようにする(よくわからんが正常動作してる)
+                tagTd.style.width = '100px';
                 tagTR.appendChild(tagTd);
 
                 const imageTd = imageTDs[currentTagIndex]!;
                 filterByMarks(imageTd);
+
+                // 画像のサイズを枚数に反比例させる
+                const numberOfImages = imagesPerRow;
+                const baseHeight = 1000 / numberOfImages;
+                const aspectRatio = 13 / 19;
+                const height = baseHeight;
+                const width = height * aspectRatio;
+                imageTd.style.height = `${height}px`;
+                imageTd.style.width = `${width}px`;
+
                 imageTR.appendChild(imageTd);
 
                 // フィルタ非表示画像も再表示時の保持用に詰めるが、1行あたりの枚数にカウントしない
@@ -65,12 +78,13 @@ export const useToolBar = () => {
         const filteredtagTds = getAllTagTdElements().filter((td) => td.style.display !== 'none');
         const ids = filteredtagTds.map((td) => td.id);
         const textData = ids.join('\n');
-        downloadText(textData, 'expressions');
+        downloadTagsSettings(textData, 'expressions');
     };
 
     const exportFilter = () => {
-        getStorage(({ filterMarksString }) => {
-            downloadText(filterMarksString, 'expressions-filter', 'json');
+        getStorage(({ tagsSettings }) => {
+            const tagsSettingsJson = JSON.stringify(tagsSettings);
+            downloadTagsSettings(tagsSettingsJson, 'expressions-filter', 'json');
         });
     };
 
@@ -78,8 +92,9 @@ export const useToolBar = () => {
         return new Promise<void>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = (event) => {
-                const filterJson = event.target?.result as string;
-                saveStorage({ filterMarksString: filterJson });
+                const tagsSettingsJson = event.target?.result as string;
+                const tagsSettings = JSON.parse(tagsSettingsJson);
+                saveStorage({ tagsSettings });
                 resolve();
             };
 
@@ -97,7 +112,7 @@ export const useToolBar = () => {
     };
 };
 
-const downloadText = (textData: string, fileName: string, extension: string = 'txt') => {
+const downloadTagsSettings = (textData: string, fileName: string, extension: string = 'txt') => {
     // テキストデータをBlobとしてダウンロード用に準備
     const blob = new Blob([textData], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);

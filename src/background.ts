@@ -1,6 +1,6 @@
 import { ACTION_GET_SETTINGS } from './constants/chrome-api';
 
-const defaultSettings: ExtensionSettings = { filterMarksString: '{}' };
+const defaultSettings: ExtensionSettings = { tagsSettings: {} };
 
 chrome.storage.local.get().then((settings) => {
     if (!Object.keys(settings).length) {
